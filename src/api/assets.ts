@@ -3,6 +3,7 @@ import { existsSync, mkdirSync } from "fs";
 import type { ApiConfig } from "../config";
 import path from "path";
 import { BadRequestError } from "./errors";
+import { randomBytes } from "crypto";
 
 export function ensureAssetsDir(cfg: ApiConfig) {
   if (!existsSync(cfg.assetsRoot)) {
@@ -27,6 +28,13 @@ export function mediaTypeToExt(mediaType: string) {
   }
 
   return extension;
+}
+
+export function getAssetPath(mediaType: string) {
+  const base = randomBytes(32);
+  const id = base.toString("base64url");
+  const ext = mediaTypeToExt(mediaType);
+  return id + ext;
 }
 
 export function getAssetDiskPath(cfg: ApiConfig, assetPath: string) {
