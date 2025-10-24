@@ -44,19 +44,8 @@ export async function handlerUploadVideo(cfg: ApiConfig, req: BunRequest) {
     );
   }
 
-  if (file.size > MAX_UPLOAD_SIZE) {
-    throw new BadRequestError(
-      `File too large. Maximum size is ${MAX_UPLOAD_SIZE / (1024 * 1024)}MB`
-    );
-  }
-
   if (file.type !== "video/mp4") {
     throw new BadRequestError("Only MP4 video files are supported");
-  }
-
-  const fileData = await file.arrayBuffer();
-  if (!fileData) {
-    throw new Error("Error reading file data");
   }
 
   const tempFilePath = path.join("/tmp", `${videoId}.mp4`);
