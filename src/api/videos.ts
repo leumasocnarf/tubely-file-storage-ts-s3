@@ -135,7 +135,7 @@ export async function processVideoForFastStart(inputFilePath: string) {
 
   const exitCode = await proc.exited;
   if (exitCode != 0) {
-    throw new Error(`ffprobe error: ${errors}`);
+    throw new Error(`ffmpeg error: ${errors}`);
   }
 
   return outputFilePath;
