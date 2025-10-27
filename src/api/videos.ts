@@ -1,10 +1,9 @@
 import { respondWithJSON } from "./json";
 import { type ApiConfig } from "../config";
-import { S3Client, type BunRequest } from "bun";
+import { type BunRequest } from "bun";
 import { BadRequestError, NotFoundError, UserForbiddenError } from "./errors";
 import { getBearerToken, validateJWT } from "../auth";
-import { getVideo, updateVideo } from "../db/videos";
-import { getAssetDiskPath, getAssetPath, getAssetURL } from "./assets";
+import { getVideo, updateVideo, type Video } from "../db/videos";
 import { uploadVideoToS3 } from "../s3";
 import path from "path";
 import { rm } from "fs/promises";
@@ -58,8 +57,8 @@ export async function handlerUploadVideo(cfg: ApiConfig, req: BunRequest) {
   let key = `${aspectRatio}/${videoId}.mp4`;
   await uploadVideoToS3(cfg, key, processedFilePath, "video/mp4");
 
-  const videoURL = `https://${cfg.s3Bucket}.s3.${cfg.s3Region}.amazonaws.com/${key}`;
-  video.videoURL = videoURL;
+  const url = `https://${cfg.s3CfDistribution}/${key}`;
+  video.videoURL = url;
   updateVideo(cfg.db, video);
 
   await Promise.all([
